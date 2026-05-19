@@ -201,7 +201,7 @@ NEXT_PUBLIC_APP_URL=http://localhost:3000
 | Phase | Kya banega | Status |
 |-------|-----------|--------|
 | **Phase 1** | Project setup + folder structure | 🔴 Current |
-| **Phase 2** | Supabase setup (DB + Auth + Storage) | 🔴 Pending |
+| **Phase 2** | Supabase setup (DB + Auth + Storage) | 🔴 Done |
 | **Phase 3** | Marketing website (landing page) | 🔴 Pending |
 | **Phase 4** | Auth (signup/login) | 🔴 Pending |
 | **Phase 5** | Dashboard UI | 🔴 Pending |
