@@ -3,8 +3,8 @@ import { GoogleGenerativeAI } from '@google/generative-ai'
 const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY!)
 
 // Embedding ke liye alag model hota hai
-const embeddingModel = genAI.getGenerativeModel({
-    model: "text-embedding-004"
+const embeddingModel = genAI.getGenerativeModel({ 
+  model: "gemini-embedding-001"  // ← yeh
 })
 
 // Answer ke liye alag model
