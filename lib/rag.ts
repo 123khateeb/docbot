@@ -6,8 +6,8 @@ function chunkText(text: string): string[] {
   const words = text.split(' ')
   const chunks:string [] = []
 
-  for (let i = 0; i < words.length; i += 500) {
-    const chunk = words.slice(i, i + 500).join(' ')
+  for (let i = 0; i < words.length; i += 200) {
+    const chunk = words.slice(i, i + 200).join(' ')
     chunks.push(chunk)
   }
 
@@ -19,9 +19,6 @@ export async function processFile (buffer: Buffer, fileType: string, botId: stri
     const supabase = await createClient()
     const text = await extractText(buffer,fileType);
     const chunk_text = chunkText(text);
-
-    console.log('Total chunks:', chunk_text.length) // ← add karo
-    console.log('First chunk preview:', chunk_text[0]?.substring(0, 100))
 
     for (const chunk of chunk_text) {
         const embedding_result = await generateEmbedding(chunk)
@@ -41,7 +38,7 @@ export async function searchSimilarChunks (question: string, botId: string):Prom
     const { data } = await supabase.rpc('match_embeddings', {
         query_embedding: questionEmbedding,
         match_bot_id: botId,
-        match_count: 5
+        match_count: 10
     })
 
     return data.map((item: { content: string }) => item.content)

@@ -1,35 +1,32 @@
-import { GoogleGenerativeAI } from '@google/generative-ai'
+import { GoogleGenAI } from '@google/genai'
 
-const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY!)
-
-// Embedding ke liye alag model hota hai
-const embeddingModel = genAI.getGenerativeModel({ 
-  model: "gemini-embedding-001"  // ← yeh
-})
-
-// Answer ke liye alag model
-const chatModel = genAI.getGenerativeModel({
-    model: "gemini-1.5-flash"
-})
+const genAI = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY! })
 
 export async function generateEmbedding(text: string): Promise<number[]> {
-    const result = await embeddingModel.embedContent(text)
-    return result.embedding.values
+    const result = await genAI.models.embedContent({
+        model: 'gemini-embedding-001',
+        contents: text,
+    })
+    return result.embeddings![0].values!
 }
 
 export async function generateAnswer(context: string, question: string): Promise<string> {
     const prompt = `
-        Tu ek helpful assistant hai.
-        Sirf neeche diye gaye context se jawab de.
-        Agar context mein jawab nahi hai to bol: "Mujhe is baare mein information nahi hai."
+        You are a helpful assistant.
+        Answer the question based on the context provided below.
+        If the answer is not directly in the context, provide the best possible answer based on the context.
+        Only say "I don't have information about this" if the context is completely irrelevant.
+        Always respond in the same language as the question.
 
         Context:
         ${context}
 
-        Sawaal: ${question}
+        Question: ${question}
         `
 
-
-    const result = await chatModel.generateContent(prompt)
-    return result.response.text()
+    const result = await genAI.models.generateContent({
+        model: 'gemini-2.5-flash',
+        contents: prompt,
+    })
+    return result.text!
 }
