@@ -3,75 +3,78 @@ import { createClient } from '@/lib/supabase/server'
 import { processFile } from '@/lib/rag'
 
 export async function POST(request: Request) {
-    const formData = await request.formData()
-    const file = formData.get('file') as File
-    const botId = formData.get('botId') as string
+  const formData = await request.formData()
+  const file = formData.get('file') as File
+  const botId = formData.get('botId') as string
 
-    if (!file || !botId) {
-        return NextResponse.json(
-            { error: 'File and botId are required' },
-            { status: 400 }
-        )
-    }
+  if (!file || !botId) {
+    return NextResponse.json(
+      { error: 'File and botId are required' },
+      { status: 400 }
+    )
+  }
 
-    const fileExt = file.name.split('.').pop()?.toLowerCase()
+  const fileExt = file.name.split('.').pop()?.toLowerCase()
 
-    if (!['pdf', 'docx', 'txt'].includes(fileExt!)) {
-        return NextResponse.json(
-            { error: 'Only PDF, DOCX, TXT are allowed' },
-            { status: 400 }
-        )
-    }
+  if (!['pdf', 'docx', 'txt'].includes(fileExt!)) {
+    return NextResponse.json(
+      { error: 'Only PDF, DOCX, TXT are allowed' },
+      { status: 400 }
+    )
+  }
 
+  const arrayBuffer = await file.arrayBuffer()
+  const buffer = Buffer.from(arrayBuffer)
 
-    // File ko buffer mein convert karo
-    const arrayBuffer = await file.arrayBuffer()
-    const buffer = Buffer.from(arrayBuffer)
+  const supabase = await createClient()
 
-    // Supabase client lo
-    const supabase = await createClient()
+  // Bot ka API key fetch karo
+  const { data: bot } = await supabase
+    .from('bots')
+    .select('ai_api_key')
+    .eq('id', botId)
+    .single()
 
-    // Storage mein upload karo
-    const filePath = `${botId}/${Date.now()}_${file.name}`
-    const { data: storageData, error: storageError } = await supabase.storage
+  // Storage mein upload karo
+  const filePath = `${botId}/${Date.now()}_${file.name}`
+  const { data: storageData, error: storageError } = await supabase.storage
     .from('documents')
-    .upload(filePath, buffer, {
-        contentType: file.type
-    })
+    .upload(filePath, buffer, { contentType: file.type })
 
-    if (storageError) {
-        return NextResponse.json(
-            { error: 'File upload failed' },
-            { status: 500 }
-        )
-    }
+  if (storageError) {
+    return NextResponse.json(
+      { error: 'File upload failed' },
+      { status: 500 }
+    )
+  }
 
-    const { data: doc, error: docError } = await supabase.from('documents')
+  const { data: doc, error: docError } = await supabase
+    .from('documents')
     .insert({
-        bot_id: botId,
-        file_name: file.name,
-        file_path: storageData.path,
-        file_type: fileExt,
-        status: 'processing'
-    }).select().single()
+      bot_id: botId,
+      file_name: file.name,
+      file_path: storageData.path,
+      file_type: fileExt,
+      status: 'processing'
+    })
+    .select()
+    .single()
 
-    if (docError) {
-  console.log('Doc error:', docError)  // ← yeh add karo
-  return NextResponse.json(
-    { error: 'Error during creation of document record' },
-    { status: 500 }
-  )
-}
+  if (docError) {
+    console.log('Doc error:', docError)
+    return NextResponse.json(
+      { error: 'Error during creation of document record' },
+      { status: 500 }
+    )
+  }
 
-    // RAG pipeline run karo
-await processFile(buffer, fileExt!, botId, doc.id)
+  // User ka API key pass karo RAG pipeline mein
+  await processFile(buffer, fileExt!, botId, doc.id, bot?.ai_api_key || undefined)
 
-// Status ready karo
-await supabase
-  .from('documents')
-  .update({ status: 'ready' })
-  .eq('id', doc.id)
+  await supabase
+    .from('documents')
+    .update({ status: 'ready' })
+    .eq('id', doc.id)
 
-// Success return karo
-return NextResponse.json({ success: true, docId: doc.id })
+  return NextResponse.json({ success: true, docId: doc.id })
 }
