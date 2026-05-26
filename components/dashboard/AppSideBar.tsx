@@ -87,7 +87,7 @@ export default function AppSideBar() {
       <SidebarHeader className="h-14 border-b border-sidebar-border flex items-center px-3">
         <div className="flex items-center gap-2.5 w-full">
           <div className="w-8 h-8 rounded-xl bg-primary flex items-center justify-center flex-shrink-0">
-            <Zap className="h-4 w-4 text-primary-foreground" />
+            <Bot className="h-4 w-4 text-primary-foreground" />
           </div>
           {open && (
             <div>

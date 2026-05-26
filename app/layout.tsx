@@ -14,8 +14,11 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "DocBot",
-  description: "AI powered chatbot for your documents",
+  title: "DocBot — AI Chatbot for your Documents",
+  description: "Upload your files and create an AI chatbot in minutes.",
+  icons: {
+    icon: '/docbot_logo.png',
+  }
 };
 
 export default function RootLayout({

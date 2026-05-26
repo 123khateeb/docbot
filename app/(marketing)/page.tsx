@@ -1,4 +1,5 @@
 import Link from 'next/link'
+import Script from 'next/script'
 import { Button } from '@/components/ui/button'
 import DemoSection from '@/app/(marketing)/demo-section'
 import { FileText, Bot, Code2, BarChart3, Shield, Zap, ArrowRight, Check, Globe, Sparkles, Users, TrendingUp } from 'lucide-react'
@@ -99,6 +100,7 @@ const testimonials = [
 
 export default function HomePage() {
   return (
+    <>
     <div className="min-h-screen bg-background">
 
       {/* ── Navbar ── */}
@@ -396,5 +398,7 @@ export default function HomePage() {
         </div>
       </footer>
     </div>
+    <script src="https://docbot-beige.vercel.app/widget.js" data-bot-id="9dc8e4f9-bbdf-4948-baa7-9c183d405472"></script>
+    </>
   )
 }
