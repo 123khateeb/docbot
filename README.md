@@ -27,7 +27,7 @@
     <img src="https://img.shields.io/badge/Vercel-deployed-black?style=flat-square&logo=vercel" alt="Vercel" />
   </p>
 
-  <img src="https://docbot-beige.vercel.app/docbot_logoo.png" alt="DocBot Screenshot" width="100%" style="border-radius: 12px; margin-top: 16px;" />
+  <img src="https://docbot-beige.vercel.app/docbot_logo.png" alt="DocBot Screenshot" width="100%" style="border-radius: 12px; margin-top: 16px;" />
 </div>
 
 ---
