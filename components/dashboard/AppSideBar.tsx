@@ -40,6 +40,7 @@ const mainNav = [
 
 const secondaryNav = [
   { title: "Settings", href: "/dashboard/settings", icon: Settings },
+  { title: "Account", href: "/dashboard/account", icon: User },
   { title: "Help", href: "/dashboard/help", icon: HelpCircle },
 ];
 
@@ -189,7 +190,7 @@ export default function AppSideBar() {
                 <button
                   type="button"
                   className="w-full flex items-center gap-2.5 px-3 py-2 rounded-lg text-sm hover:bg-muted transition-colors text-left"
-                  onClick={() => { setDropdownOpen(false); router.push('/dashboard/settings'); }}
+                  onClick={() => { setDropdownOpen(false); router.push('/dashboard/account'); }}
                 >
                   <User className="h-4 w-4 text-muted-foreground" />
                   <span>Account</span>
