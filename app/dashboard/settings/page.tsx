@@ -115,6 +115,14 @@ export default function SettingsPage() {
     setSaving(false);
     setSaved(true);
     setTimeout(() => setSaved(false), 3000);
+
+    const { error } = await supabase
+      .from("bots")
+      .update({
+        ai_provider: selectedProvider,
+        ai_api_key: apiKey.trim(),
+      })
+      .eq("id", botId);
   }
 
   async function handleRemoveKey() {
@@ -182,7 +190,8 @@ export default function SettingsPage() {
               <button
                 key={provider.id}
                 type="button"
-                onClick={() => setSelectedProvider(provider.id)}
+                onClick={() => {
+                  setSelectedProvider(provider.id)}}
                 className={`relative text-left p-4 rounded-xl border-2 transition-all duration-150 ${
                   selectedProvider === provider.id
                     ? "border-primary bg-primary/5"

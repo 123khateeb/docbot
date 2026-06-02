@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server'
-import { createClient } from '@/lib/supabase/server'
+import { createClient, createServiceClient } from '@/lib/supabase/server'
 import { processFile } from '@/lib/rag'
 
 export async function POST(request: Request) {
@@ -71,7 +71,8 @@ export async function POST(request: Request) {
   // User ka API key pass karo RAG pipeline mein
   await processFile(buffer, fileExt!, botId, doc.id, bot?.ai_api_key || undefined)
 
-  await supabase
+  const serviceSupabase = createServiceClient()
+  await serviceSupabase
     .from('documents')
     .update({ status: 'ready' })
     .eq('id', doc.id)
