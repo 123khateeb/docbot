@@ -100,30 +100,24 @@ export default function SettingsPage() {
   }, [selectedProvider]);
 
   async function handleSave() {
-    if (!botId || !apiKey.trim()) return;
-    setSaving(true);
+  if (!botId || !apiKey.trim()) return;
+  setSaving(true);
 
-    const supabase = createClient();
-    await supabase
-      .from("bots")
-      .update({
-        ai_provider: selectedProvider,
-        ai_api_key: apiKey.trim(),
-      })
-      .eq("id", botId);
+  const supabase = createClient();
+  const { error } = await supabase
+    .from("bots")
+    .update({
+      ai_provider: selectedProvider,
+      ai_api_key: apiKey.trim(),
+    })
+    .eq("id", botId);
 
-    setSaving(false);
+  setSaving(false);
+  if (!error) {
     setSaved(true);
     setTimeout(() => setSaved(false), 3000);
-
-    const { error } = await supabase
-      .from("bots")
-      .update({
-        ai_provider: selectedProvider,
-        ai_api_key: apiKey.trim(),
-      })
-      .eq("id", botId);
   }
+}
 
   async function handleRemoveKey() {
     if (!botId) return;
