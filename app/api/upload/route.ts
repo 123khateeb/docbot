@@ -69,7 +69,7 @@ export async function POST(request: Request) {
   }
 
   // User ka API key pass karo RAG pipeline mein
-  await processFile(buffer, fileExt!, botId, doc.id, bot?.ai_api_key || undefined)
+  await processFile(buffer, fileExt!, botId, doc.id)
 
   const serviceSupabase = createServiceClient()
   await serviceSupabase
