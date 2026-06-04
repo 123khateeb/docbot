@@ -1,8 +1,8 @@
 import { GoogleGenAI } from '@google/genai'
 
-// ── Embedding — always Gemini (sirf Gemini embedding support karta hai) ──
-export async function generateEmbedding(text: string, apiKey?: string): Promise<number[]> {
-  const key = apiKey || process.env.GEMINI_API_KEY!
+// Embedding — hamesha server ka Gemini key
+export async function generateEmbedding(text: string): Promise<number[]> {
+  const key = process.env.GEMINI_API_KEY!
   const genAI = new GoogleGenAI({ apiKey: key })
 
   const result = await genAI.models.embedContent({
@@ -12,7 +12,7 @@ export async function generateEmbedding(text: string, apiKey?: string): Promise<
   return result.embeddings![0].values!
 }
 
-// ── Answer — provider ke hisaab se ──
+// Answer — user ke provider aur key se
 export async function generateAnswer(
   context: string,
   question: string,

@@ -32,7 +32,7 @@ export async function POST(request: Request) {
     })
   }
 
-  const chunks = await searchSimilarChunks(question, botId, apiKey)
+  const chunks = await searchSimilarChunks(question, botId)
   const context = chunks.join('\n\n')
 
   const answer = await generateAnswer(context, question, provider, apiKey)
