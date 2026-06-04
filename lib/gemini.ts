@@ -65,6 +65,27 @@ ANSWER:`
     })
     const data = await res.json()
     return data.choices[0].message.content
+  } if (provider === 'groq') {
+    const res = await fetch('https://api.groq.com/openai/v1/chat/completions', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${apiKey}`,
+      },
+      body: JSON.stringify({
+        model: 'llama-3.3-70b-versatile',
+        messages: [{ role: 'user', content: prompt }],
+        max_tokens: 1000,
+      }),
+    })
+    const data = await res.json()
+
+    // Error check add kiya
+    if (!res.ok || !data.choices?.[0]?.message?.content) {
+      throw new Error(`Groq error: ${JSON.stringify(data)}`)
+    }
+
+    return data.choices[0].message.content
   }
 
   if (provider === 'openai') {
